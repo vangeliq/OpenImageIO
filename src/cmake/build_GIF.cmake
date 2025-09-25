@@ -132,6 +132,8 @@ build_dependency_with_cmakelist_template(GIF
         -D BUILD_SHARED_LIBS=${GIF_BUILD_SHARED_LIBS}
 )
 
+find_package(GIF REQUIRED)
+
 # verify that the install happened, else print success
 set (GIF_ROOT ${GIF_LOCAL_INSTALL_DIR})
 
