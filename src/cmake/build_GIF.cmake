@@ -133,6 +133,8 @@ build_dependency_with_cmakelist_template(GIF
 )
 
 find_package(GIF REQUIRED)
+target_link_libraries(OpenImageIO PRIVATE GIF::GIF)
+
 
 # verify that the install happened, else print success
 set (GIF_ROOT ${GIF_LOCAL_INSTALL_DIR})

@@ -88,7 +88,6 @@ endif()
 
 # Set library properties
 set_target_properties(GIF PROPERTIES
-    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     OUTPUT_NAME "GIF"
@@ -176,7 +175,7 @@ endif()
 # Export targets
 install(EXPORT GIFTargets
     FILE GIFTargets.cmake
-    NAMESPACE GIF::GIF
+    NAMESPACE GIF::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/GIF
 )
 
@@ -189,13 +188,6 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 
-set(GIF_CONFIG_IN
-"@PACKAGE_INIT@
-
-include(\\\"\\\${CMAKE_CURRENT_LIST_DIR}/GIFTargets.cmake\\\")
-
-check_required_components(GIF)
-")
 
 set(GIF_CONFIG_IN "@PACKAGE_INIT@
 
@@ -208,7 +200,7 @@ file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GIFConfig.cmake.in" "${GIF_CONFIG_
 
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GIFConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/GIFConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/GIFConfig.cmake"
     INSTALL_DESTINATION lib/cmake/GIF
 )
