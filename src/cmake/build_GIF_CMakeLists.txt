@@ -2,6 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # https://github.com/AcademySoftwareFoundation/OpenImageIO
 
+######################################################################
+# CMakeLists.txt for GIF/GIFLIB
+
+# GIFLib repository does not actually have a cmakelists.txt included.
+# So when we clone the repository on build_GIF.cmake, we also want to
+# add this file as a "CMakeLists.txt" into the repository. This way
+# we can run it the same way with other libraries, following the same
+# logic as the build_with_cmake_macro
+######################################################################
+
+
 cmake_minimum_required(VERSION 3.15)
 project(GIF VERSION @GIF_BUILD_VERSION@ LANGUAGES C)
 
@@ -60,30 +71,30 @@ set(GIF_SOURCES
 
 # Create the main library
 if(BUILD_SHARED_LIBS)
-    add_library(gif SHARED ${GIF_SOURCES})
+    add_library(GIF SHARED ${GIF_SOURCES})
 else()
-    add_library(gif STATIC ${GIF_SOURCES})
+    add_library(GIF STATIC ${GIF_SOURCES})
 endif()
 
-add_library(GIF::gif ALIAS gif)
+add_library(GIF::GIF ALIAS gif)
 
 if(MSVC AND BUILD_SHARED_LIBS)
     # Add export definitions for Windows DLL
-    target_compile_definitions(gif
+    target_compile_definitions(GIF
         PRIVATE -DGIF_EXPORTS
         PUBLIC -DGIF_DLL
     )
 endif()
 
 # Set library properties
-set_target_properties(gif PROPERTIES
+set_target_properties(GIF PROPERTIES
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    OUTPUT_NAME "gif"
+    OUTPUT_NAME "GIF"
 )
 
-target_include_directories(gif
+target_include_directories(GIF
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
@@ -124,7 +135,7 @@ set(UTILS
 if(BUILD_UTILS)
     foreach(UTIL ${UTILS})
         add_executable(${UTIL} ${UTIL}.c ${UTILS_COMMON_SOURCES})
-        target_link_libraries(${UTIL} PRIVATE gif m)
+        target_link_libraries(${UTIL} PRIVATE GIF m)
         
         # Set utility output properties
         set_target_properties(${UTIL} PROPERTIES
@@ -139,7 +150,7 @@ endif()
 # Installation
 include(GNUInstallDirs)
 
-install(TARGETS gif
+install(TARGETS GIF
     EXPORT GIFTargets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
