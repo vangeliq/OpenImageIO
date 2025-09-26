@@ -76,7 +76,7 @@ else()
     add_library(GIF STATIC ${GIF_SOURCES})
 endif()
 
-add_library(GIF::GIF ALIAS gif)
+add_library(GIF::GIF ALIAS GIF)
 
 if(MSVC AND BUILD_SHARED_LIBS)
     # Add export definitions for Windows DLL
