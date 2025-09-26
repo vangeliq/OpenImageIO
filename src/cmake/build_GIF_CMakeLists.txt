@@ -178,6 +178,30 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 
+set(GIF_CONFIG_IN
+"@PACKAGE_INIT@
+
+include(\\\"\\\${CMAKE_CURRENT_LIST_DIR}/GIFTargets.cmake\\\")
+
+check_required_components(GIF)
+")
+
+set(GIF_CONFIG_IN "@PACKAGE_INIT@
+
+include(\${CMAKE_CURRENT_LIST_DIR}/GIFTargets.cmake)
+
+check_required_components(GIF)
+")
+
+file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GIFConfig.cmake.in" "${GIF_CONFIG_IN}")
+
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GIFConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/GIFConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/GIF
+)
+
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/GIFConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/GIFConfigVersion.cmake"
