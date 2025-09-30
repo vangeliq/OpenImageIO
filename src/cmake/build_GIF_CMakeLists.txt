@@ -88,7 +88,8 @@ else()
     add_library(GIF STATIC ${GIF_SOURCES})
 endif()
 
-# add_library(GIF::GIF ALIAS GIF)
+# Create an alias target since we want to refer to it as GIF::GIF
+add_library(GIF::GIF ALIAS GIF)
 
 # Set library properties
 set_target_properties(GIF PROPERTIES
