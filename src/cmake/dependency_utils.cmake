@@ -587,7 +587,7 @@ macro (build_dependency_with_cmake pkgname)
         # noValueKeywords:
         "NOINSTALL"
         # singleValueKeywords:
-        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET"
+        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET;CMAKELISTS_TEMPLATE"
         # multiValueKeywords:
         "CMAKE_ARGS"
         # argsToParse:
@@ -636,6 +636,14 @@ macro (build_dependency_with_cmake pkgname)
                         WORKING_DIRECTORY ${${pkgname}_LOCAL_SOURCE_DIR}
                         ${_pkg_exec_quiet})
     endif ()
+
+    # if a CMakeLists.txt is specified, add it to the repository. This will replace existing ones
+    if (_pkg_CMAKELISTS_TEMPLATE)
+        message(STATUS "Adding custom CMakeLists.txt for ${pkgname}")
+        configure_file(${_pkg_CMAKELISTS_TEMPLATE} 
+                      "${${pkgname}_LOCAL_SOURCE_DIR}/${_pkg_SOURCE_SUBDIR}/CMakeLists.txt"
+                      @ONLY)
+    endif()
 
     # Configure the package
     if (${PROJECT_NAME}_DEPENDENCY_BUILD_VERBOSE)
