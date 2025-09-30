@@ -104,6 +104,7 @@ set_target_properties(GIF PROPERTIES
 target_include_directories(GIF
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
 )
 
 # Utility programs common source files
