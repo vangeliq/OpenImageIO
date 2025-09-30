@@ -17,7 +17,7 @@ cmake_minimum_required (VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
 project(GIF VERSION @GIF_BUILD_VERSION@ LANGUAGES C)
 
 # Options
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(BUILD_UTILS "Build utility programs" OFF)
 
 
@@ -67,12 +67,6 @@ set(GIF_SOURCES
     quantize.c
 )
 
-if(WIN32)
-    list(APPEND GIF_SOURCES getopt.c)
-else()
-    message(STATUS "Using system getopt library on Linux")
-endif()
-
 # Define the GIF library
 if(BUILD_SHARED_LIBS)
     add_library(GIF SHARED ${GIF_SOURCES})
@@ -104,7 +98,6 @@ set_target_properties(GIF PROPERTIES
 target_include_directories(GIF
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
 )
 
 # Utility programs common source files
@@ -128,7 +121,7 @@ set(UTILS
     gifinto
     gifsponge
     giftext
-    giftool
+    giftool #note: this requires getopt.c, which is not available on Windows
     gifwedge
 )
 
