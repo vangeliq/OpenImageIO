@@ -29,6 +29,7 @@ build_dependency_with_cmake(GIF
 
 # Set some things up that we'll need for a subsequent find_package to work
 set (GIF_ROOT ${GIF_LOCAL_INSTALL_DIR})
+set (GIF_DIR ${GIF_LOCAL_INSTALL_DIR})
 
 # Signal to caller that we need to find again at the installed location
 set (GIF_REFIND TRUE)
