@@ -28,6 +28,7 @@ build_dependency_with_cmake(GIF
 )
 
 # Set some things up that we'll need for a subsequent find_package to work
+list(APPEND CMAKE_PREFIX_PATH "${GIF_LOCAL_INSTALL_DIR}/lib64")
 set (GIF_ROOT ${GIF_LOCAL_INSTALL_DIR})
 set (GIF_DIR ${GIF_LOCAL_INSTALL_DIR})
 
