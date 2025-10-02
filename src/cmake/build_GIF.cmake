@@ -25,12 +25,13 @@ build_dependency_with_cmake(GIF
     CMAKELISTS_TEMPLATE "${CMAKE_CURRENT_LIST_DIR}/build_GIF_CMakeLists.txt"
     CMAKE_ARGS
         -D BUILD_SHARED_LIBS=${GIF_BUILD_SHARED_LIBS}
-        -D CMAKE_INSTALL_LIBDIR=lib
 )
 
 # Set some things up that we'll need for a subsequent find_package to work
 set (GIF_ROOT ${GIF_LOCAL_INSTALL_DIR})
-set (GIF_DIR ${GIF_LOCAL_INSTALL_DIR})
+
+find_package(GIF REQUIRED CONFIG PATHS "D:/a/OpenImageIO/OpenImageIO/build/deps/dist/lib/cmake")
+message(STATUS "GIF found at ${GIF_DIR}")
 
 # Signal to caller that we need to find again at the installed location
 set (GIF_REFIND TRUE)
