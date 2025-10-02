@@ -30,9 +30,6 @@ build_dependency_with_cmake(GIF
 # Set some things up that we'll need for a subsequent find_package to work
 set (GIF_ROOT ${GIF_LOCAL_INSTALL_DIR})
 
-find_package(GIF REQUIRED CONFIG PATHS "D:/a/OpenImageIO/OpenImageIO/build/deps/dist/lib/cmake")
-message(STATUS "GIF found at ${GIF_DIR}")
-
 # Signal to caller that we need to find again at the installed location
 set (GIF_REFIND TRUE)
 set (GIF_REFIND_VERSION ${GIF_BUILD_VERSION})
