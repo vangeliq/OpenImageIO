@@ -587,7 +587,7 @@ macro (build_dependency_with_cmake pkgname)
         # noValueKeywords:
         "NOINSTALL"
         # singleValueKeywords:
-        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET;CMAKELISTS_TEMPLATE"
+        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET"
         # multiValueKeywords:
         "CMAKE_ARGS"
         # argsToParse:
@@ -595,9 +595,8 @@ macro (build_dependency_with_cmake pkgname)
 
     message (STATUS "Building local ${pkgname} ${_pkg_VERSION} from ${_pkg_GIT_REPOSITORY}")
     
-    if(DEFINED _pkg_CMAKELISTS_TEMPLATE AND _pkg_CMAKELISTS_TEMPLATE)
-        if(EXISTS "${_pkg_CMAKELISTS_TEMPLATE}")
-            set (${pkgname}_CMAKELISTS_TEMPLATE "${_pkg_CMAKELISTS_TEMPLATE}")
+    if(DEFINED ${pkgname}_CMAKELISTS_TEMPLATE AND ${pkgname}_CMAKELISTS_TEMPLATE)
+            message (STATUS "cmakelist template provided on: ${{pkgname}_CMAKELISTS_TEMPLATE}")
         endif()
     endif()
     
