@@ -587,7 +587,7 @@ macro (build_dependency_with_cmake pkgname)
         # noValueKeywords:
         "NOINSTALL"
         # singleValueKeywords:
-        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET;CMAKELISTS_TEMPLATE"
+        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET"
         # multiValueKeywords:
         "CMAKE_ARGS"
         # argsToParse:
