@@ -658,7 +658,7 @@ macro (build_dependency_with_cmake pkgname)
 
     
     # if a CMakeLists.txt is specified, add it to the repository. This will replace existing ones
-    if (${pkgname}_CMAKELISTS_TEMPLATE_PATH)
+    if(DEFINED ${pkgname}_CMAKELISTS_TEMPLATE_PATH AND NOT "${${pkgname}_CMAKELISTS_TEMPLATE_PATH}" STREQUAL "")
         message(STATUS "Adding custom CMakeLists.txt for ${pkgname}")
         configure_file(${pkgname}_CMAKELISTS_TEMPLATE_PATH} 
                       "${${pkgname}_LOCAL_SOURCE_DIR}/${_pkg_SOURCE_SUBDIR}/CMakeLists.txt"
