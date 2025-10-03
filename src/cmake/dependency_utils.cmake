@@ -597,7 +597,6 @@ macro (build_dependency_with_cmake pkgname)
     
     if(DEFINED ${pkgname}_CMAKELISTS_TEMPLATE AND ${pkgname}_CMAKELISTS_TEMPLATE)
             message (STATUS "cmakelist template provided on: ${{pkgname}_CMAKELISTS_TEMPLATE}")
-        endif()
     endif()
     
 
