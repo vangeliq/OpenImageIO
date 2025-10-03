@@ -587,13 +587,23 @@ macro (build_dependency_with_cmake pkgname)
         # noValueKeywords:
         "NOINSTALL"
         # singleValueKeywords:
-        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET"
+        "GIT_REPOSITORY;GIT_TAG;GIT_COMMIT;VERSION;SOURCE_SUBDIR;GIT_SHALLOW;QUIET;CMAKELISTS_TEMPLATE"
         # multiValueKeywords:
         "CMAKE_ARGS"
         # argsToParse:
         ${ARGN})
 
     message (STATUS "Building local ${pkgname} ${_pkg_VERSION} from ${_pkg_GIT_REPOSITORY}")
+
+    
+
+    # Debug output
+    message(STATUS "Parsed values for ${pkgname}:")
+    message(STATUS "  GIT_REPOSITORY: ${_pkg_GIT_REPOSITORY}")
+    message(STATUS "  GIT_TAG: ${_pkg_GIT_TAG}")
+    message(STATUS "  CMAKELISTS_TEMPLATE: ${_pkg_CMAKELISTS_TEMPLATE}")
+    message(STATUS "  CMAKE_ARGS: ${_pkg_CMAKE_ARGS}")
+    message(STATUS "  UNPARSED_ARGUMENTS: ${_pkg_UNPARSED_ARGUMENTS}")
 
     set (${pkgname}_LOCAL_SOURCE_DIR "${${PROJECT_NAME}_LOCAL_DEPS_ROOT}/${pkgname}")
     set (${pkgname}_LOCAL_BUILD_DIR "${${PROJECT_NAME}_LOCAL_DEPS_ROOT}/${pkgname}-build")
