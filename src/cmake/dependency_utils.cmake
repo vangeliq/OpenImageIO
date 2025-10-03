@@ -595,10 +595,9 @@ macro (build_dependency_with_cmake pkgname)
 
     message (STATUS "Building local ${pkgname} ${_pkg_VERSION} from ${_pkg_GIT_REPOSITORY}")
     
-    # Optional: Add validation for CMAKELISTS_TEMPLATE if provided
     if(DEFINED _pkg_CMAKELISTS_TEMPLATE AND _pkg_CMAKELISTS_TEMPLATE)
-        if(NOT EXISTS "${_pkg_CMAKELISTS_TEMPLATE}")
-            message(WARNING "CMAKELISTS_TEMPLATE file not found: ${_pkg_CMAKELISTS_TEMPLATE}")
+        if(EXISTS "${_pkg_CMAKELISTS_TEMPLATE}")
+            set (${pkgname}_CMAKELISTS_TEMPLATE "${_pkg_CMAKELISTS_TEMPLATE}")
         endif()
     endif()
     
