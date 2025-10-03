@@ -17,7 +17,7 @@ set_cache (GIF_BUILD_SHARED_LIBS ${LOCAL_BUILD_SHARED_LIBS_DEFAULT}
 
 string (MAKE_C_IDENTIFIER ${GIF_BUILD_VERSION} GIF_VERSION_IDENT)
 
-set (GIF_CMAKELISTS_TEMPLATE "${CMAKE_CURRENT_LIST_DIR}/build_GIF_CMakeLists.txt")
+set (GIF_CMAKELISTS_TEMPLATE_PATH "${CMAKE_CURRENT_LIST_DIR}/build_GIF_CMakeLists.txt")
 build_dependency_with_cmake(GIF
     VERSION         ${GIF_BUILD_VERSION}
     GIT_REPOSITORY  ${GIF_BUILD_GIT_REPOSITORY}
@@ -25,7 +25,7 @@ build_dependency_with_cmake(GIF
     CMAKE_ARGS
         -D BUILD_SHARED_LIBS=${GIF_BUILD_SHARED_LIBS}
 )
-unset(GIF_CMAKELISTS_TEMPLATE)
+unset(GIF_CMAKELISTS_TEMPLATE_PATH)
 
 
 # Set some things up that we'll need for a subsequent find_package to work

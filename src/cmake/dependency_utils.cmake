@@ -596,9 +596,8 @@ macro (build_dependency_with_cmake pkgname)
     message (STATUS "Building local ${pkgname} ${_pkg_VERSION} from ${_pkg_GIT_REPOSITORY}")
     
     if(DEFINED ${pkgname}_CMAKELISTS_TEMPLATE_PATH AND ${pkgname}_CMAKELISTS_TEMPLATE_PATH)
-            message (STATUS "cmakelist template provided on: ${{pkgname}_CMAKELISTS_TEMPLATE_PATH}")
+            message (STATUS "cmakelist template provided on: ${${pkgname}_CMAKELISTS_TEMPLATE_PATH}")
     endif()
-    
 
     set (${pkgname}_LOCAL_SOURCE_DIR "${${PROJECT_NAME}_LOCAL_DEPS_ROOT}/${pkgname}")
     set (${pkgname}_LOCAL_BUILD_DIR "${${PROJECT_NAME}_LOCAL_DEPS_ROOT}/${pkgname}-build")
@@ -660,7 +659,7 @@ macro (build_dependency_with_cmake pkgname)
     # if a CMakeLists.txt is specified, add it to the repository. This will replace existing ones
     if(DEFINED ${pkgname}_CMAKELISTS_TEMPLATE_PATH AND NOT "${${pkgname}_CMAKELISTS_TEMPLATE_PATH}" STREQUAL "")
         message(STATUS "Adding custom CMakeLists.txt for ${pkgname}")
-        configure_file(${pkgname}_CMAKELISTS_TEMPLATE_PATH} 
+        configure_file("${${pkgname}_CMAKELISTS_TEMPLATE_PATH}" 
                       "${${pkgname}_LOCAL_SOURCE_DIR}/${_pkg_SOURCE_SUBDIR}/CMakeLists.txt"
                       @ONLY)
     endif()
