@@ -227,3 +227,14 @@ jobs:
             !build/testsuite/fits-images
             !build/testsuite/j2kp4files_v1_5
             ${{ inputs.extra_artifacts }}
+      - name: Upload build folder on failure
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+        if: ${{ failure() }}
+        with:
+          name: build-folder-${{github.job}}-${{inputs.nametag}}
+          path: |
+            build/
+            !build/testsuite/oiio-images
+            !build/testsuite/openexr-images
+            !build/testsuite/fits-images
+            !build/testsuite/j2kp4files_v1_5

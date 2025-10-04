@@ -1,0 +1,99 @@
+# Copyright Contributors to the OpenImageIO project.
+# SPDX-License-Identifier: Apache-2.0
+# https://github.com/AcademySoftwareFoundation/OpenImageIO
+
+name: CI-windows-only
+
+on:
+  push:
+    # Skip jobs when only documentation files are changed
+    paths:
+      - '**'
+      - '!**.md'
+      - '!**.rst'
+      - '!**/analysis.yml'
+      - '!**/docs.yml'
+      - '!**/scorecard.yml'
+      - '!**/wheel.yml'
+      - '!**.properties'
+      - '!docs/**'
+  pull_request:
+    paths:
+      - '**'
+      - '!**.md'
+      - '!**.rst'
+      - '!docs/**'
+  schedule:
+    # Full nightly build
+    - cron: "0 8 * * *"
+      if: github.repository == 'AcademySoftwareFoundation/OpenImageIO'
+  workflow_dispatch:
+    # This allows manual triggering of the workflow from the web
+
+permissions: read-all
+
+# Allow subsequent pushes to the same PR or REF to cancel any previous jobs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  #
+  # Windows Tests
+  #
+  windows:
+    if: ${{ ! contains(github.ref, 'linux-only') && ! contains(github.ref, 'macos-only') }}
+    name: "${{matrix.desc}}"
+    uses: ./.github/workflows/build-steps.yml
+    with:
+      nametag: ${{ matrix.nametag || 'unnamed!' }}
+      runner: ${{ matrix.runner || 'ubuntu-latest' }}
+      container: ${{ matrix.container }}
+      cc_compiler: ${{ matrix.cc_compiler }}
+      cxx_compiler: ${{ matrix.cxx_compiler }}
+      cxx_std: ${{ matrix.cxx_std || '17' }}
+      build_type: ${{ matrix.build_type || 'Release' }}
+      depcmds: ${{ matrix.depcmds }}
+      extra_artifacts: ${{ matrix.extra_artifacts }}
+      fmt_ver: ${{ matrix.fmt_ver }}
+      opencolorio_ver: ${{ matrix.opencolorio_ver }}
+      openexr_ver: ${{ matrix.openexr_ver }}
+      pybind11_ver: ${{ matrix.pybind11_ver }}
+      python_ver: ${{ matrix.python_ver }}
+      setenvs: ${{ matrix.setenvs }}
+      simd: ${{ matrix.simd }}
+      skip_build: ${{ matrix.skip_build }}
+      skip_tests: ${{ matrix.skip_tests }}
+      benchmark: ${{ matrix.benchmark }}
+      abi_check: ${{ matrix.abi_check }}
+      build_docs: ${{ matrix.build_docs }}
+      generator: ${{ matrix.generator }}
+      ctest_args: ${{ matrix.ctest_args }}
+      ctest_test_timeout: ${{ matrix.ctest_test_timeout }}
+      coverage: ${{ matrix.coverage || 0 }}
+      sonar: ${{ matrix.sonar || 0 }}
+      # Windows is a PITA, so we expect very few dependencies to be present or
+      # built. But we would like to add more dependencies and reduce this list
+      # of exceptions in the future.
+      required_deps: ${{ matrix.required_deps || 'all' }}
+      optional_deps: ${{ matrix.optional_deps || 'CUDAToolkit;DCMTK;FFmpeg;GIF;JXL;Libheif;LibRaw;Nuke;OpenCV;OpenGL;OpenJPEG;openjph;OpenCV;OpenVDB;Ptex;pystring;Qt5;Qt6;TBB;R3DSDK;${{matrix.optional_deps_append}}' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - desc: Windows-2022 VS2022
+            runner: windows-2022
+            nametag: windows-2022
+            vsver: 2022
+            generator: "Visual Studio 17 2022"
+            python_ver: "3.9"
+            setenvs: export OPENIMAGEIO_PYTHON_LOAD_DLLS_FROM_PATH=1
+          - desc: Windows-2025 VS2022
+            runner: windows-2025
+            nametag: windows-2025
+            vsver: 2022
+            generator: "Visual Studio 17 2022"
+            python_ver: "3.9"
+            setenvs: export OPENIMAGEIO_PYTHON_LOAD_DLLS_FROM_PATH=1
+            benchmark: 1
