@@ -41,6 +41,36 @@ if(MSVC)
     endif()
 endif()
 
+# replace including unistd to use windows equivalent
+if(WIN32)
+    file(GLOB_RECURSE ORIGINAL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
+
+
+    foreach(HEADER ${ORIGINAL_HEADERS})
+        # Compute output path in build dir
+        file(RELATIVE_PATH REL_PATH "${CMAKE_CURRENT_SOURCE_DIR}" "${HEADER}")
+        set(OUT_HEADER "${CMAKE_CURRENT_BINARY_DIR}/${REL_PATH}")
+
+        # Make sure directory exists
+        get_filename_component(OUT_DIR ${OUT_HEADER} DIRECTORY)
+        file(MAKE_DIRECTORY ${OUT_DIR})
+
+        # Read header
+        file(READ ${HEADER} CONTENTS)
+
+        # Replace unistd.h include with #ifdef
+        if(CONTENTS MATCHES "#include <unistd.h>")
+            string(REPLACE "#include <unistd.h>" "#ifdef _WIN32\n#include <io.h>\n#else\n#include <unistd.h>\n#endif" CONTENTS "${CONTENTS}")
+        endif()
+
+        # Write patched header
+        file(WRITE ${OUT_HEADER} "${CONTENTS}")
+
+        # Add patched directory to include path
+        include_directories(${CMAKE_CURRENT_BINARY_DIR})
+    endforeach()
+endif()
+
 # Set output directories
 if(MSVC)
     # For MSVC, we want Debug and Release in separate directories
