@@ -5,13 +5,17 @@
 ######################################################################
 # CMakeLists.txt for GIF/GIFLIB
 
-# GIFLib repository does not actually have a cmakelists.txt included.
+# GIFLib repository doesn't have a cmakelists.txt included.
 # So when we clone the repository on build_GIF.cmake, we also want to
 # add this file as a "CMakeLists.txt" into the repository. This way
 # we can run it the same way with other libraries, following the same
 # logic as the build_with_cmake_macro
-######################################################################
 
+# Windows compatibility: Source code includes unistd.h, which is not available
+# on Windows systems. We patch source files to use appropriate Windows
+# alternatives and use these patched files (in GIF-build) instead of 
+# the originals (GIF)
+######################################################################
 
 cmake_minimum_required (VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
 project(GIF VERSION @GIF_BUILD_VERSION@ LANGUAGES C)
@@ -41,10 +45,9 @@ if(MSVC)
     endif()
 endif()
 
-# replace including unistd to use windows equivalent
+# replace #includes unistd to use windows equivalent
 if(WIN32)
     file(GLOB_RECURSE ORIGINAL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
-
 
     foreach(HEADER ${ORIGINAL_HEADERS})
         # Compute output path in build dir
@@ -58,7 +61,7 @@ if(WIN32)
         # Read header
         file(READ ${HEADER} CONTENTS)
 
-        # Replace unistd.h include with #ifdef
+        # Add #ifdef guards to unistd.h
         if(CONTENTS MATCHES "#include <unistd.h>")
             string(REPLACE "#include <unistd.h>" "#ifdef _WIN32\n#include <io.h>\n#else\n#include <unistd.h>\n#endif" CONTENTS "${CONTENTS}")
         endif()
@@ -87,6 +90,19 @@ else()
 endif()
 
 # Core library source files
+if (WIN32)
+    # Use patched files from build directory
+    set(GIF_SOURCES
+        ${CMAKE_CURRENT_BINARY_DIR}/dgif_lib.c
+        ${CMAKE_CURRENT_BINARY_DIR}/egif_lib.c
+        ${CMAKE_CURRENT_BINARY_DIR}/gif_err.c
+        ${CMAKE_CURRENT_BINARY_DIR}/gif_hash.c
+        ${CMAKE_CURRENT_BINARY_DIR}/gifalloc.c
+        ${CMAKE_CURRENT_BINARY_DIR}/openbsd-reallocarray.c
+        ${CMAKE_CURRENT_BINARY_DIR}/quantize.c
+    )
+else()
+    # Use original files on non-Windows platforms
 set(GIF_SOURCES
     dgif_lib.c
     egif_lib.c
@@ -96,6 +112,8 @@ set(GIF_SOURCES
     openbsd-reallocarray.c
     quantize.c
 )
+endif()
+
 
 # Define the GIF library
 if(BUILD_SHARED_LIBS)
@@ -125,17 +143,34 @@ set_target_properties(GIF PROPERTIES
 )
 
 # Add include path for GIFLIB
-target_include_directories(GIF
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-)
+if(WIN32)
+    target_include_directories(GIF
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    )
+else()
+    target_include_directories(GIF
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    )
+endif()
 
 # Utility programs common source files
-set(UTILS_COMMON_SOURCES
-    getarg.c
-    qprintf.c
-    gif_font.c
-)
+if(WIN32)
+    # Use patched files from build directory
+    set(UTILS_COMMON_SOURCES
+        ${CMAKE_CURRENT_BINARY_DIR}/getarg.c
+        ${CMAKE_CURRENT_BINARY_DIR}/qprintf.c
+        ${CMAKE_CURRENT_BINARY_DIR}/gif_font.c
+    )
+else()
+    # Use original files on non-Windows platforms
+    set(UTILS_COMMON_SOURCES
+        getarg.c
+        qprintf.c
+        gif_font.c
+    )
+endif()
 
 # Define utility programs
 set(UTILS
@@ -182,12 +217,23 @@ install(TARGETS GIF
 )
 
 # Install headers
-install(FILES
-    gif_lib.h
-    gif_hash.h
-    gif_lib_private.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if(WIN32)
+    # Install patched headers from build directory
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/gif_lib.h
+        ${CMAKE_CURRENT_BINARY_DIR}/gif_hash.h
+        ${CMAKE_CURRENT_BINARY_DIR}/gif_lib_private.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+else()
+    # Install original headers on non-Windows platforms
+    install(FILES
+        gif_lib.h
+        gif_hash.h
+        gif_lib_private.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+endif()
 
 # Install utilities
 if(BUILD_UTILS)
