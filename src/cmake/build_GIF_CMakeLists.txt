@@ -90,19 +90,7 @@ else()
 endif()
 
 # Core library source files
-if (WIN32)
-    # Use patched files from build directory
-    set(GIF_SOURCES
-        ${CMAKE_CURRENT_BINARY_DIR}/dgif_lib.c
-        ${CMAKE_CURRENT_BINARY_DIR}/egif_lib.c
-        ${CMAKE_CURRENT_BINARY_DIR}/gif_err.c
-        ${CMAKE_CURRENT_BINARY_DIR}/gif_hash.c
-        ${CMAKE_CURRENT_BINARY_DIR}/gifalloc.c
-        ${CMAKE_CURRENT_BINARY_DIR}/openbsd-reallocarray.c
-        ${CMAKE_CURRENT_BINARY_DIR}/quantize.c
-    )
-else()
-    # Use original files on non-Windows platforms
+
 set(GIF_SOURCES
     dgif_lib.c
     egif_lib.c
@@ -112,7 +100,7 @@ set(GIF_SOURCES
     openbsd-reallocarray.c
     quantize.c
 )
-endif()
+#endif()
 
 
 # Define the GIF library
