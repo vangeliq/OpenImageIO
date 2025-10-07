@@ -22,6 +22,8 @@ build_dependency_with_cmake(GIF
     VERSION         ${GIF_BUILD_VERSION}
     GIT_REPOSITORY  ${GIF_BUILD_GIT_REPOSITORY}
     GIT_TAG         ${GIF_BUILD_GIT_TAG}
+    QUIET           "NOT_QUIET"
+
     CMAKE_ARGS
         -D BUILD_SHARED_LIBS=${GIF_BUILD_SHARED_LIBS}
 )
